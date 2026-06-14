@@ -1,11 +1,17 @@
+import { useContext } from "react";
 import { ExamInfo } from "../../data/examInfo";
 import { getColorSet } from "../../utils/colorMap";
+import { ExamDataContext } from "../../context/ExamDataContext";
 import CountdownTimer from "../home/CountdownTimer";
 import RegistrationStatus from "./RegistrationStatus";
 
 /** 전체 보기용 시험 카드 (3열 그리드) */
 export default function ExamInfoCard({ exam }: { exam: ExamInfo }) {
+  const examData = useContext(ExamDataContext);
+  if (!examData) throw new Error("ExamDataProvider가 필요합니다.");
+  const { examDates } = examData;
   const c = getColorSet(exam.color);
+  const effectiveDate = examDates[exam.id] ? new Date(examDates[exam.id]) : exam.examDate;
 
   return (
     <div className="bg-white rounded-3xl shadow-sm overflow-hidden">
@@ -15,7 +21,7 @@ export default function ExamInfoCard({ exam }: { exam: ExamInfo }) {
           <div>
             <h3 className="text-xl font-bold">{exam.fullName}</h3>
             <p className="text-sm opacity-80">
-              시험일: {exam.examDate.toLocaleDateString("ko-KR")}
+              시험일: {effectiveDate.toLocaleDateString("ko-KR")}
             </p>
           </div>
         </div>
@@ -25,7 +31,7 @@ export default function ExamInfoCard({ exam }: { exam: ExamInfo }) {
         <RegistrationStatus exam={exam} />
 
         <CountdownTimer
-          examDate={exam.examDate}
+          examDate={effectiveDate}
           examName={`${exam.fullName} D-DAY`}
           color={exam.color as "blue" | "amber" | "green"}
         />

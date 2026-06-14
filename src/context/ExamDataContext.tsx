@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useState, useEffect, ReactNode, useContext } from "react";
 import { examInfoList } from "../data/examInfo";
 
 export interface ExamNotice {
@@ -26,6 +26,12 @@ interface ExamDataContextType {
 }
 
 export const ExamDataContext = createContext<ExamDataContextType | null>(null);
+
+export function useExamData() {
+  const ctx = useContext(ExamDataContext);
+  if (!ctx) throw new Error("ExamDataProvider가 필요합니다.");
+  return ctx;
+}
 
 const defaultStats: Record<string, ExamStats> = {
   english: { applicants: 0, passed: 0 },

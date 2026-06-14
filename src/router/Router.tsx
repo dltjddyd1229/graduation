@@ -10,9 +10,15 @@ import ExamDetailPage from "../pages/ExamDetailPage";
 import ApplicantPage from "../pages/ApplicantPage";
 import ManagePage from "../pages/ManagePage";
 
+function getRouterBasename() {
+  const base = import.meta.env.BASE_URL;
+  if (base === "/" || base === "") return "";
+  return new URL(base, window.location.origin).pathname.replace(/\/$/, "");
+}
+
 export default function Router() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={getRouterBasename()}>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/intro" element={<IntroPage />} />
